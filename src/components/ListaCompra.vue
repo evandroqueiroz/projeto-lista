@@ -4,6 +4,9 @@
         <hr>
         <p><input type="text" v-model="produto" placeholder="Nome do Produto" class="form-control"></p>
         <p><input type="text" v-model="quantidade" placeholder="Quantidade do Produto" class="form-control"></p>
+        <div v-if="isInvalido" class="alert alert-danger" role="alert">
+            Nome do produto e quantidade devem ser preenchidos!!
+        </div>
         <button type="submit" v-on:click.prevent="incluirProduto" class="btn btn-primary">Incluir</button>
         <hr>
         <div class="list-group">
@@ -11,7 +14,7 @@
                 <span><strong>{{item.produto}}</strong></span>
                 <p>{{item.quantidade}}</p>
                 <div>
-                    <a href="#" v-on:click.prevent="excluirProduto">Excluir</a>
+                    <a href="#" @click.prevent="excluirProduto(index)">Excluir</a>
                 </div>
             </div>
         </div>
@@ -24,12 +27,19 @@
             return{
                 produto: '',
                 quantidade: '',
-                lista: []
+                lista: [],
+                isInvalido: false
             }
         },
         methods:{
             incluirProduto(){
                 console.log (this.produto, this.quantidade);
+                if(this.produto==='' || this.quantidade===''){
+                    this.isInvalido = true;
+                    return;
+                }
+                this.isInvalido = false;
+                
                 this.lista.push({
                     produto: this.produto,
                     quantidade: this.quantidade
@@ -37,8 +47,9 @@
                 this.produto = '';
                 this.quantidade = '';
             },
-            excluirProduto(){
-                console.log (this.produto, this.quantidade);
+            excluirProduto(posicao){
+                console.log (posicao);
+                this.lista.splice(posicao, 1);
             }
         }
     }
